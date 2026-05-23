@@ -220,11 +220,16 @@ function ValidationStep() {
       <Panel title="Step 5 · Validation engine" action={<Tag tone="warn">3 warnings · 1 blocking</Tag>} dense>
         <ul className="divide-y divide-border">
           {checks.map((c, i) => {
-            const tone = c.kind === "blocking" ? "destructive" : c.kind === "warn" ? "warning" : c.kind === "info" ? "info" : "success";
+            const styleMap: Record<string, string> = {
+              ok: "bg-success/15 text-success",
+              warn: "bg-warning/15 text-warning",
+              blocking: "bg-destructive/15 text-destructive",
+              info: "bg-info/15 text-info",
+            };
             const Icon = c.kind === "ok" ? Check : c.kind === "info" ? Info : c.kind === "warn" ? AlertTriangle : ShieldAlert;
             return (
               <li key={i} className="px-4 py-3 flex gap-3">
-                <div className={`size-7 rounded grid place-items-center bg-${tone}/15 text-${tone} shrink-0`}>
+                <div className={`size-7 rounded grid place-items-center shrink-0 ${styleMap[c.kind]}`}>
                   <Icon className="size-3.5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -274,10 +279,13 @@ function ApprovalStep() {
     <Panel title="Step 6 · Approval workflow" dense>
       <ol className="divide-y divide-border">
         {chain.map((c, i) => {
-          const tone = c.state === "approved" ? "success" : c.state === "waiting" ? "warning" : "muted";
+          const stepStyle =
+            c.state === "approved" ? "bg-success/15 text-success"
+            : c.state === "waiting" ? "bg-warning/15 text-warning"
+            : "bg-surface-2 text-muted-foreground";
           return (
             <li key={i} className="px-4 py-3 flex items-center gap-3">
-              <div className={`size-7 rounded-full grid place-items-center text-[11px] font-mono bg-${tone === "muted" ? "surface-2" : tone + "/15"} text-${tone === "muted" ? "muted-foreground" : tone}`}>
+              <div className={`size-7 rounded-full grid place-items-center text-[11px] font-mono ${stepStyle}`}>
                 {i + 1}
               </div>
               <div className="flex-1">
